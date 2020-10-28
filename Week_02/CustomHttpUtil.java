@@ -1,17 +1,21 @@
-# 作业
-1. 对 串行 / 并行 / CMS / G1 GC进行总结。
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
-| GC类型  | 参数 | 特点 |
-|---|---|---|
-| 串行GC | -XX:+UseSerialGC | STW时间较长，不适合在服务器使用 |
-| 并行GC | -XX:+UseParallelGC | 多线程运作，相较于串行GC，总的暂停时间变短 |
-| CMS | -XX:+UseConcMarkSweepGC | 将耗时长的并发标记和并发清除操作和用户线程并行 |
-| G1 | -XX:+UseG1GC | 可预测的停顿(允许程序通过参数约定垃圾收集的时间) |
+import java.io.IOException;
 
-2. 写一段代码，使用 HttpClient 或 OkHttp 访问 http://localhost:8801。
-
-编写CustomHttpUtil
-```java
+/**
+ * @author eazonshaw
+ * @date 2020/10/28  21:27
+ *
+ * 使用 HttpClient 或 OkHttp 访问 http://localhost:8801
+ *
+ */
 public class CustomHttpUtil {
 
 
@@ -19,7 +23,7 @@ public class CustomHttpUtil {
      * post请求
      * @param url 链接
      * @param jsonParam json字符串参数
-     * @return 请求页面html
+     * @return
      */
     public static String httpPost(String url, String jsonParam) throws IOException {
 
@@ -32,7 +36,7 @@ public class CustomHttpUtil {
         entity.setContentEncoding("UTF-8");
         entity.setContentType("application/json");
         httpPost.setEntity(entity);
-        
+
         try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
             return handleResponse(response);
         }
@@ -42,6 +46,7 @@ public class CustomHttpUtil {
      * get请求
      * @param url 链接
      * @return 请求页面html
+     * @throws IOException
      */
     public static String httpGet(String url) throws IOException {
 
@@ -60,10 +65,15 @@ public class CustomHttpUtil {
         EntityUtils.consume(entity);
         return str;
     }
-}
-```
-使用CustomHttpUtil访问 http://localhost:8801
-```
-CustomHttpUtil.httpGet("http://localhost:8801");
-```
 
+    public static void main(String[] args) {
+        try {
+            System.out.println(httpGet("http://localhost:8801"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+}
