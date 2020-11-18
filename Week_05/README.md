@@ -8,7 +8,7 @@
 
 三种方式实现 Spring Bean 的装配，新建一个 bean ，命名为 Student。
 
-```
+```java
 public class Student {
     public void say(){
         System.out.println("I'm a student.");
@@ -17,10 +17,10 @@ public class Student {
 ```
 
 * 方式一：注解。给 Student 添加注解 `@Component`,在配置文件中定义扫描 bean ,单元测试读取配置文件，输出 bean 中的方法。
-```
+```xml
 <context:component-scan base-package="spring02"/>
 ```
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = "classpath:spring02/annotation/spring-config.xml")
 public class SpringTest {
@@ -35,15 +35,15 @@ public class SpringTest {
 ```
 
 * 方式二：xml 定义 bean。在 xml 中定义 bean，单元测试读取 xml 配置文件。
-```
+```xml
 <bean id="student" class="spring02.bean.Student"/>
 ```
-```
+```java
 @ContextConfiguration(value = "classpath:spring02/xml/spring-bean.xml")
 ```
 
 * 方式三：自动装配 bean。定义 SpringConfig，将 bean 实例自动装配。`注意：bean 的名称默认为构造函数的名称，若构造函数名称找不到，就直接找返回值`。单元测试读取该配置类。
-```
+```java
 @Configuration
 public class SpringConfig {
     @Bean
@@ -52,14 +52,14 @@ public class SpringConfig {
     }
 }
 ```
-```
+```java
 @ContextConfiguration(classes = SpringConfig.class)
 ```
 
 2. （必做）给前面课程提供的Student/Klass/School实现自动配置和Starter。
 
 * 新建 MyConfiguration 类，配置三个bean
-```
+```java
 @Configuration
 public class MyConfiguration {
 
@@ -88,7 +88,7 @@ public class MyConfiguration {
 ```
 
 * 实现自动装配类 MyAutoConfiguration
-```
+```java
 @Configuration
 @Import({MyConfiguration.class})
 public class MyAutoConfiguration {
@@ -96,13 +96,13 @@ public class MyAutoConfiguration {
 ```
 
 * 在 META-INF 底下新增配置文件 spring.factories：
-```
+```properties
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   springautoconfig.configuration.MyAutoConfiguration
 ```
 
 * 新建测试类：
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootApplication
 public class SpringTest {
@@ -127,7 +127,7 @@ Class1 have 10 students and one is Student(id=101, name=KK101)
 3）配置Hikari连接池，改进上述操作。提交代码到Github。
 
 * 使用JDBC接口实现增删改查（这里以新增为例）,首先新增一个 DbUtil 处理数据库连接和关闭：
-```
+```java
 public class DbUtil {
 
     public static final String URL = "jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8&useSSL=false&rewriteBatchedStatements=true";
@@ -172,7 +172,7 @@ public class DbUtil {
 ```
 
 * 实现查询和新增：
-```
+```java
 @Test
 public void query(){
     Connection conn = null;
@@ -210,7 +210,7 @@ public void insert(){
 ```
 
 * 实现事务和批处理：
-```
+```java
 @Test
 public void tx(){
     Connection conn = null;
@@ -257,7 +257,7 @@ public void batchInsert(){
 ```
 
 * 配置Hikari连接池，1）引入 maven 依赖，2）新建配置文件 hikari.properties，3）测试
-```
+```xml
 <dependency>
     <groupId>com.zaxxer</groupId>
     <artifactId>HikariCP</artifactId>
@@ -265,7 +265,7 @@ public void batchInsert(){
 </dependency>
 ```
 
-```
+```properties
 jdbcUrl=jdbc:mysql://localhost:3306/test?useSSL=false&useUnicode=true&characterEncoding=UTF-8
 driverClassName=com.mysql.jdbc.Driver
 dataSource.user=root
@@ -275,7 +275,7 @@ dataSource.serverName=localhost
 dataSource.maximumPoolSize=10
 ```
 
-```
+```java
 @Test
 public void hikariTest(){
     HikariConfig config = new HikariConfig("/hikari.properties");
