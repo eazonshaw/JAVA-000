@@ -14,7 +14,7 @@
 
 下面是表的ER图及表结构DDL：
 
-![]()
+![](https://github.com/eazonshaw/JAVA-000/blob/main/Week_06/1.png)
 
 ```sql
 -- -----------------------------------------------------
